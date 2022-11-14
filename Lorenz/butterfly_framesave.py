@@ -106,9 +106,9 @@ yz_line = projection_line([r0[1]], [r0[2]])
 xz_line = projection_line([r0[0]], [r0[2]])
 yx_line = projection_line([r0[1]], [r0[0]])
 
-x_line = Line2D([t_ev[0]], [r0[1]], linewidth=1., color="red", zorder=1, label="x", rasterized=True)
-y_line = Line2D([t_ev[0]], [r0[2]], linewidth=1., color="green", zorder=1, label="y", rasterized=True)
-z_line = Line2D([t_ev[0]], [r0[2]], linewidth=1., color="cyan", zorder=1, label="z", rasterized=True)
+x_line = Line2D([t_ev[0]], [r0[1]], linewidth=1., color="red", zorder=1, label="x", vectorized=True)
+y_line = Line2D([t_ev[0]], [r0[2]], linewidth=1., color="green", zorder=1, label="y", vectorized=True)
+z_line = Line2D([t_ev[0]], [r0[2]], linewidth=1., color="cyan", zorder=1, label="z", vectorized=True)
 
 
 #################################### Make Figure ####################################

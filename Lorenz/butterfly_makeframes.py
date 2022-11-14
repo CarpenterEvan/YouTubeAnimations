@@ -36,7 +36,7 @@ print(f"{di=}")
 the_input = np.linspace(0,t.size-di, fps, dtype=int, endpoint=True)
 
 print(f"{the_input=}")
-exit()
+
 
 def get_ranges(x,y,z, classic=True):
 	'''Find the maximum and minimum value of the x,y,z solutions, round it to the nearest 5, 
@@ -110,7 +110,7 @@ spec = fig.add_gridspec(1, 1)
 xz_ax = fig.add_subplot(spec[0, 0])
 
 smallest_value, biggest_value = smallest_and_biggest(x, y, z)
-x_ax_limit, y_ax_limit, z_ax_limit = get_ranges(x, y, z, classic=True)
+x_ax_limit, y_ax_limit, z_ax_limit = get_ranges(x, y, t, classic=True)
 
 ####################################### Titles #######################################
 initial_condition_string = r"\noindent$x_0=${:.4f} $y_0=${:.4f} $z_0=${:.4f}".format(x[0], y[0], z[0])
@@ -131,7 +131,7 @@ def make_frame(i):
 	xz_ax.set(xlim = x_ax_limit, ylim = z_ax_limit)
 
 	x_data = x[:i]
-	z_data = z[:i]
+	z_data = t[:i]
 	#t_data = t[:i]
 
 	xz_ax.add_patch(xz_fixed_point_1)
