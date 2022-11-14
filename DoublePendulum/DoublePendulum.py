@@ -19,7 +19,7 @@ def deriv(t, y, L1, L2, m1, m2):
     c, s = np.cos(theta1 - theta2), np.sin(theta1 - theta2)
 
     theta1dot = z1
-    z1dot = (m2 * g * np.sin(theta2) * c - m2 * s * (L1 * z1**2 * c + \
+    z1dot = (m2 * g * np.sin(theta2) * c - m2 * s * (L1 * z1**2 * c +
              L2 * z2**2) - (m1 + m2) * g * np.sin(theta1)) / L1 / (m1 + m2 * s**2)
     theta2dot = z2
     z2dot = ((m1 + m2) * (L1 * z1**2 * s - g * np.sin(theta2) + g *
@@ -31,8 +31,8 @@ def calc_E(y_0):
     """Return the total energy of the system."""
     th1, th1d, th2, th2d = y_0
     V = -(m1 + m2) * L1 * g * np.cos(th1) - m2 * L2 * g * np.cos(th2)
-    T = 0.5 * m1 * (L1 * th1d)**2 + 0.5 * m2 * ((L1 * th1d)**2 + \
-                    (L2 * th2d)**2 + 2 * L1 * L2 * th1d * th2d * np.cos(th1 - th2))
+    T = 0.5 * m1 * (L1 * th1d)**2 + 0.5 * m2 * ((L1 * th1d)**2 +
+                                                (L2 * th2d)**2 + 2 * L1 * L2 * th1d * th2d * np.cos(th1 - th2))
     return T + V
 
 

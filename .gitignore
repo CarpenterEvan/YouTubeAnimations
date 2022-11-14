@@ -162,3 +162,4 @@ cython_debug/
 # Custom user extension for data files. 
 *.png
 *.mp4
+*.DS_Store/

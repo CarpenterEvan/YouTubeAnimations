@@ -105,8 +105,8 @@ print("starting animation")
 ani = FuncAnimation(fig, scope.update, zip(y0_x, y1_x),
                     interval=30, blit=True, repeat=False, save_count=len(t_ev))
 plt.show()
-if input("Save? [y/n]: ") == "y":
-    print("saving animation")
-    writervideo = FFMpegWriter(fps=60, bitrate=-1)
-    ani.save('chaos.mp4', writer=writervideo, dpi=120)
-    print("done!")
+# if input("Save? [y/n]: ") == "y":
+print("saving animation")
+writervideo = FFMpegWriter(fps=60, bitrate=-1)
+ani.save('chaos.mp4', writer=writervideo, dpi=120)
+print("done!")

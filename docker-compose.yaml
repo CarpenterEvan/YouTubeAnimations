@@ -1,0 +1,28 @@
+services:
+  yt-animations:
+    image: jupyter/scipy-notebook
+    shm_size: 8gb
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    ports:
+      - 8888:8888
+    # entrypoint:
+    #   [
+    #     "jupyter",
+    #     "lab",
+    #     "--ip=0.0.0.0",
+    #     "--no-browser",
+    #     "--allow-root",
+    #     "--port=8888",
+    #     "--NotebookApp.token=''",
+    #     "--NotebookApp.password=''",
+    #     "--NotebookApp.notebook_dir=/workspace",
+    #   ]
+    entrypoint: ["python", "scopetest.py"]
+    working_dir: /workspace
+    hostname: yt-animations
+    volumes:
+      - type: bind
+        source: .
+        target: /workspace
