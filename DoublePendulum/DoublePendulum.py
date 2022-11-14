@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-from scipy.integrate import odeint, solve_ivp
+from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 import os
@@ -27,17 +27,15 @@ def deriv(t, y, L1, L2, m1, m2):
 
 def calc_E(y_0):
     """Return the total energy of the system."""
-
-    th1, th1d, th2, th2d = y_0.T
+    th1, th1d, th2, th2d = y_0
     V = -(m1 + m2) * L1 * g * np.cos(th1) - m2 * L2 * g * np.cos(th2)
     T = 0.5 * m1 * (L1 * th1d)**2 + 0.5 * m2 * ((L1 * th1d)**2 + (L2 * th2d)**2 +
             2 * L1 * L2 * th1d * th2d * np.cos(th1-th2))
     return T + V
 
 # Maximum time, time point spacings and the time grid (all in s).
-tmax, dt = 60, 0.001
+tmax, dt = 10, 0.01
 t = np.arange(0, tmax+dt, dt)
-print(f"{t=}")
 # Initial conditions: theta1, dtheta1/dt, theta2, dtheta2/dt.
 y_0 = np.array([np.pi, # theta1
                0,         # z1
@@ -46,13 +44,20 @@ y_0 = np.array([np.pi, # theta1
                ])
 
 
-y = solve_ivp(deriv, t_span=(t[0],t[-1]), y0=y_0, t_eval=t, args=(L1, L2, m1, m2), method="RK45")
+y = solve_ivp(deriv, t_span=(t[0],t[-1]), y0=y_0, t_eval=t, args=(L1, L2, m1, m2), method="RK45", atol=0.0000001, rtol=0.00000001)
 # Check that the calculation conserves total energy to within some tolerance.
-EDRIFT = 0.001
+EDRIFT = 0.01
 # Total energy from the initial conditions
 E = calc_E(y_0)
-if np.max(np.sum(np.abs(calc_E(y_0) - E))) > EDRIFT:
+print(E)
+print(calc_E(y.y))
+plt.plot(t, np.abs(calc_E(y.y) - E))
+plt.show()
+
+if np.max(np.sum(np.abs(calc_E(y.y) - E))) > EDRIFT:
     sys.exit(f'Maximum energy drift of {EDRIFT} exceeded.')
+else: 
+    pass
 
 # Unpack z and theta as a function of time
 theta1, theta2 = y.y[0], y.y[2]
@@ -78,7 +83,7 @@ def make_frame(i, bang=False):
     ax.plot([0, x1[i], x2[i]], [0, y1[i], y2[i]], lw=2, color='b')
     # Circles representing the anchor point of rod 1, and bobs 1 and 2.
     #c0 = Circle((0, 0), 2, edgecolor="cyan", linewidth=0.5, fill=False, zorder=10)
-    c1 = Circle((x1[i], y1[i]), r, fc='b', ec='b', zorder=10)
+    c1 = Circle((x1[i], y1[i]), r, fc='r', ec='r', zorder=10)
     c2 = Circle((x2[i], y2[i]), r, fc='r', ec='r', zorder=10)
     #ax.add_patch(c0)
     ax.add_patch(c1)
