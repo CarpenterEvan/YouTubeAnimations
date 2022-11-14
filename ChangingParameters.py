@@ -10,7 +10,7 @@ plt.style.use('dark_background')
 
 d_0 = [0.01, 0, 0]
 r0 = [0, 0.01, 30]
-sigma, rho, beta = (5.5, 28, 8.0/3.0)
+sigma, rho, beta = (5.5, 28, 8.0 / 3.0)
 
 
 t_ev = np.linspace(0, 20, 2000)  # time that's being evaluated
@@ -18,7 +18,7 @@ t_sp = [0, len(t_ev)]  # span of the time
 
 
 def get_ranges(x, y, z, classic=True):
-    '''Find the maximum and minimum value of the x,y,z solutions, round it to the nearest 5, 
+    '''Find the maximum and minimum value of the x,y,z solutions, round it to the nearest 5,
     and return (min_rounded, max_rounded) for yz, xz, yx axes'''
     round_to_nearest = 10
 
@@ -31,13 +31,13 @@ def get_ranges(x, y, z, classic=True):
     axis_limit = max(largest_value(x), largest_value(y), largest_value(z))
 
     if classic:
-        x_ax_limit = np.array((-0.5, 0.5))*axis_limit
-        y_ax_limit = np.array((-0.5, 0.5))*axis_limit
-        z_ax_limit = np.array((0, 1))*axis_limit
+        x_ax_limit = np.array((-0.5, 0.5)) * axis_limit
+        y_ax_limit = np.array((-0.5, 0.5)) * axis_limit
+        z_ax_limit = np.array((0, 1)) * axis_limit
     else:
-        x_ax_limit = np.array((-1, 1))*axis_limit
-        y_ax_limit = np.array((-1, 1))*axis_limit
-        z_ax_limit = np.array((-1, 1))*axis_limit
+        x_ax_limit = np.array((-1, 1)) * axis_limit
+        y_ax_limit = np.array((-1, 1)) * axis_limit
+        z_ax_limit = np.array((-1, 1)) * axis_limit
     return x_ax_limit, y_ax_limit, z_ax_limit
 
 
@@ -47,7 +47,7 @@ def smallest_and_biggest(x, y, z):
     return smallest, biggest
 
 
-def lorenz(t, r, sigma=10, rho=28, beta=8.0/3.0):
+def lorenz(t, r, sigma=10, rho=28, beta=8.0 / 3.0):
     x, y, z = r
     fx = sigma * (y - x)
     fy = rho * x - y - x * z
@@ -87,8 +87,15 @@ xz_ax = fig.add_subplot(spec[0, 0])
 yx_ax = fig.add_subplot(spec[0, 2])
 ax4 = fig.add_subplot(spec[1, :])
 
-fig.suptitle(r"\noindent$x_0=${:.4f} $y_0=${:.4f} $z_0=${:.4f}\\[0.5cm]$\sigma=${:.4f} $\rho=${:.4f} $\beta=${:.4f}".format(
-    r0[0], r0[1], r0[2], sigma, rho, beta), fontsize=14)
+fig.suptitle(
+    r"\noindent$x_0=${:.4f} $y_0=${:.4f} $z_0=${:.4f}\\[0.5cm]$\sigma=${:.4f} $\rho=${:.4f} $\beta=${:.4f}".format(
+        r0[0],
+        r0[1],
+        r0[2],
+        sigma,
+        rho,
+        beta),
+    fontsize=14)
 yz_ax.set(title="Looking head on",
           xlabel="y", ylabel="z",
           xlim=y_ax_limit, ylim=z_ax_limit)
@@ -131,12 +138,19 @@ def update(data):
     param_list, solution_list = data
     sigma, rho, beta = param_list
     x_data, y_data, z_data, t_data = solution_list
-    fig.suptitle(r"\noindent$x_0=${:.4f} $y_0=${:.4f} $z_0=${:.4f}\\[0.5cm]$\sigma=${:.4f} $\rho=${:.4f} $\beta=${:.4f}".format(
-        r0[0], r0[1], r0[2], sigma, rho, beta), fontsize=14)
+    fig.suptitle(
+        r"\noindent$x_0=${:.4f} $y_0=${:.4f} $z_0=${:.4f}\\[0.5cm]$\sigma=${:.4f} $\rho=${:.4f} $\beta=${:.4f}".format(
+            r0[0],
+            r0[1],
+            r0[2],
+            sigma,
+            rho,
+            beta),
+        fontsize=14)
     fixed_point_a = [np.sqrt(beta * (rho - 1)),
-                     np.sqrt(beta * (rho - 1)), rho-1]
+                     np.sqrt(beta * (rho - 1)), rho - 1]
     fixed_point_b = [-np.sqrt(beta * (rho - 1)), -
-                     np.sqrt(beta * (rho - 1)), rho-1]
+                     np.sqrt(beta * (rho - 1)), rho - 1]
     fixed_points = np.array([fixed_point_a,
                              fixed_point_b])
 
@@ -150,7 +164,7 @@ def update(data):
                         color="white", rasterized=True))
 
     unique_fixed_point_magnitudes = [
-        -np.sqrt(beta * (rho - 1)), np.sqrt(beta * (rho - 1)), rho-1]
+        -np.sqrt(beta * (rho - 1)), np.sqrt(beta * (rho - 1)), rho - 1]
 
     for point in unique_fixed_point_magnitudes:
         ax4_fixed_points_line = ax4.axhline(

@@ -62,7 +62,7 @@ class Scope:
         self.tdata.append(t)
         self.y1_data.append(y1)
         self.y2_data.append(y2)
-        self.y_diff.append(np.abs(y1-y2))
+        self.y_diff.append(np.abs(y1 - y2))
 
         self.line1.set_data(self.tdata, self.y1_data)
         self.line2.set_data(self.tdata, self.y2_data)
@@ -78,12 +78,14 @@ ax[0].set_xlim([t_ev[0], t_ev[-1]])
 ax[0].set_ylim([-maximum_value_rounded, maximum_value_rounded])
 
 
-maximum_difference_rounded = (max(y0_x-y1_x) // 5) * 5 + 5
+maximum_difference_rounded = (max(y0_x - y1_x) // 5) * 5 + 5
 ax[1].set_xlim([t_ev[0], t_ev[-1]])
 ax[1].set_ylim([-0.5, maximum_difference_rounded])
 
 ax[0].set_title(
-    f"Initial Condition of Blue line: {r0}" + "\n" + f"Initial Condition of Red line: {r1}")
+    f"Initial Condition of Blue line: {r0}" +
+    "\n" +
+    f"Initial Condition of Red line: {r1}")
 ax[0].set_xlabel("Time")
 ax[1].set_xlabel("Time")
 ax[0].set_ylabel("x-component of vectors")
@@ -94,11 +96,11 @@ plt.tight_layout()
 if sys.argv[-1] == "image":
     ax[0].plot(t, y0_x)
     ax[0].plot(t, y1_x)
-    ax[1].plot(t, abs(y0_x-y1_x))
+    ax[1].plot(t, abs(y0_x - y1_x))
     plt.show()
     exit()
 
-scope = Scope(ax, dt=t_ev[-1]/len(t_ev))
+scope = Scope(ax, dt=t_ev[-1] / len(t_ev))
 print("starting animation")
 ani = FuncAnimation(fig, scope.update, zip(y0_x, y1_x),
                     interval=30, blit=True, repeat=False, save_count=len(t_ev))

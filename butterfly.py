@@ -14,7 +14,7 @@ t_sp = [0, len(t_ev)]  # span of the time
 
 
 def get_ranges(x, y, z, classic=True):
-    '''Find the maximum and minimum value of the x,y,z solutions, round it to the nearest 5, 
+    '''Find the maximum and minimum value of the x,y,z solutions, round it to the nearest 5,
     and return (min_rounded, max_rounded) for yz, xz, yx axes'''
     round_to_nearest = 10
 
@@ -27,13 +27,13 @@ def get_ranges(x, y, z, classic=True):
     axis_limit = max(largest_value(x), largest_value(y), largest_value(z))
 
     if classic:
-        x_ax_limit = np.array((-0.5, 0.5))*axis_limit
-        y_ax_limit = np.array((-0.5, 0.5))*axis_limit
-        z_ax_limit = np.array((0, 1))*axis_limit
+        x_ax_limit = np.array((-0.5, 0.5)) * axis_limit
+        y_ax_limit = np.array((-0.5, 0.5)) * axis_limit
+        z_ax_limit = np.array((0, 1)) * axis_limit
     else:
-        x_ax_limit = np.array((-1, 1))*axis_limit
-        y_ax_limit = np.array((-1, 1))*axis_limit
-        z_ax_limit = np.array((-1, 1))*axis_limit
+        x_ax_limit = np.array((-1, 1)) * axis_limit
+        y_ax_limit = np.array((-1, 1)) * axis_limit
+        z_ax_limit = np.array((-1, 1)) * axis_limit
     return x_ax_limit, y_ax_limit, z_ax_limit
 
 
@@ -43,7 +43,7 @@ def smallest_and_biggest(x, y, z):
     return smallest, biggest
 
 
-def lorenz(t, r, sigma, rho=28, beta=8.0/3.0):
+def lorenz(t, r, sigma, rho=28, beta=8.0 / 3.0):
     x, y, z = r
     fx = sigma * (y - x)
     fy = rho * x - y - x * z
@@ -51,7 +51,7 @@ def lorenz(t, r, sigma, rho=28, beta=8.0/3.0):
     return np.array([fx, fy, fz], float)
 
 
-sigma, rho, beta = (10, 25, 8.0/3.0)
+sigma, rho, beta = (10, 25, 8.0 / 3.0)
 
 sol = solve_ivp(lorenz, t_span=t_sp, y0=r0,
                 t_eval=t_ev, args=(sigma, rho, beta))
@@ -100,15 +100,16 @@ ax4.add_line(y_line)
 ax4.add_line(z_line)
 
 
-fixed_point_a = [np.sqrt(beta * (rho - 1)), np.sqrt(beta * (rho - 1)), rho-1]
-fixed_point_b = [-np.sqrt(beta * (rho - 1)), -np.sqrt(beta * (rho - 1)), rho-1]
+fixed_point_a = [np.sqrt(beta * (rho - 1)), np.sqrt(beta * (rho - 1)), rho - 1]
+fixed_point_b = [-np.sqrt(beta * (rho - 1)), -
+                 np.sqrt(beta * (rho - 1)), rho - 1]
 fixed_points = np.array([fixed_point_a,
                          fixed_point_b])
 
 unique_fixed_point_magnitudes = [-np.sqrt(beta * (rho - 1)),
-                                 np.sqrt(beta * (rho - 1)), rho-1]
+                                 np.sqrt(beta * (rho - 1)), rho - 1]
 for point in unique_fixed_point_magnitudes:
-    ax4.add_line(Line2D(t_ev, [point]*len(t_ev), linewidth=0.5,
+    ax4.add_line(Line2D(t_ev, [point] * len(t_ev), linewidth=0.5,
                  color="magenta", zorder=0, linestyle=":"))
 
 for point in fixed_points:
@@ -150,8 +151,15 @@ def update(input_data):
     return yz_line, xz_line, yx_line, x_line, y_line, z_line, yz_circ, yx_circ, xz_circ
 
 
-fig.suptitle(r"\noindent$x_0=${:.4f} $y_0=${:.4f} $z_0=${:.4f}\\[0.5cm]$\sigma=${:.4f} $\rho=${:.4f} $\beta=${:.4f}".format(
-    r0[0], r0[1], r0[2], sigma, rho, beta), fontsize=14)
+fig.suptitle(
+    r"\noindent$x_0=${:.4f} $y_0=${:.4f} $z_0=${:.4f}\\[0.5cm]$\sigma=${:.4f} $\rho=${:.4f} $\beta=${:.4f}".format(
+        r0[0],
+        r0[1],
+        r0[2],
+        sigma,
+        rho,
+        beta),
+    fontsize=14)
 yz_ax.set(title="Looking head on",
           xlabel="y", ylabel="z",
           xlim=y_ax_limit, ylim=z_ax_limit)
@@ -184,5 +192,7 @@ if save == "y":
     print("saving animation")
     writervideo = FFMpegWriter(fps=60, bitrate=-1)
     ani.save(
-        f"chaos_s{sigma:.0f}b{beta:.0f}r{rho:.0f}_x{r0[0]:.0f}y{r0[1]:.0f}z{r0[2]:.0f}.mp4", writer=writervideo, dpi=240)
+        f"chaos_s{sigma:.0f}b{beta:.0f}r{rho:.0f}_x{r0[0]:.0f}y{r0[1]:.0f}z{r0[2]:.0f}.mp4",
+        writer=writervideo,
+        dpi=240)
     print("done!")
