@@ -22,21 +22,21 @@ def lorenz(t, r, sigma=10, rho=28, beta=8.0/3.0):
     return np.array([fx, fy, fz], float)
 
 def solving():
-	print("About to solve")
-	sol = solve_ivp(lorenz, t_span = [0, t_ev[-1]], y0 = r0, t_eval = t_ev, args=(sigma, rho, beta))
-	print("\n" + sol.message  + "\n")
-	return sol
+    print("About to solve")
+    sol = solve_ivp(lorenz, t_span = [0, t_ev[-1]], y0 = r0, t_eval = t_ev, args=(sigma, rho, beta))
+    print("\n" + sol.message  + "\n")
+    return sol
 
 def main():
 	
-	sol = solving()
-	d = {"sol": sol,
-		"args": (sigma, rho, beta)}
-	solution_file_path = f"{sys.path[0]}/butterfly_solution"
-	solution_file = open(solution_file_path, "wb")
-	print(f"\nSaving solution to {solution_file_path}\n")
-	pickle.dump(d, solution_file)
+    sol = solving()
+    d = {"sol": sol,
+         "args": (sigma, rho, beta)}
+    solution_file_path = f"{sys.path[0]}/butterfly_solution"
+    solution_file = open(solution_file_path, "wb")
+    print(f"\nSaving solution to {solution_file_path}\n")
+    pickle.dump(d, solution_file)
 
 test=True
 if __name__ == "__main__":	
-	main()
+    main()
