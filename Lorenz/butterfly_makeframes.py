@@ -19,23 +19,24 @@ x, y, z = solution["sol"].y
 t = solution["sol"].t
 sigma, rho, beta = solution["args"] 
 
-number_of_cores_used = 2
+number_of_cores_used = 1
 fps = 24
 total_time_sec = t[-1] 
 points_per_sec = len(t) / t[-1]
 
-dt = total_time_sec/t.size
+dt = t[-1]/t.size
+
 di = int(1/dt/fps)
 
-print(f"{total_time_sec=}")
-print(f"{points_per_sec=}")
-print(f"{fps=}")
-print(f"{dt=}")
-print(f"{di=}")
+#print(f"{total_time_sec=}")
+#print(f"{points_per_sec=}")
+#print(f"{fps=}")
+#print(f"{dt=}")
+#print(f"{di=}")
 
-the_input = np.linspace(0,t.size-di, fps, dtype=int, endpoint=True)
+the_input = np.arange(0,t.size-di, di, dtype=int)
 
-print(f"{the_input=}")
+#print(f"{the_input=}")
 
 
 def get_ranges(x,y,z, classic=True):
@@ -65,7 +66,7 @@ def smallest_and_biggest(x,y,z):
 class projection_line(Line2D):
 	def __init__(self, xdata:list, ydata:list):
 		super().__init__(xdata, ydata)
-		self.set_linewidth(0.6)
+		self.set_linewidth(1)
 		self.set_color("blue")
 		self.set_zorder(1)
 		self.set_rasterized(True)
@@ -73,10 +74,10 @@ class plot_circle(Circle):
 	def __init__(self, xy:tuple, fixed_point=False):
 		super().__init__(xy)
 		if fixed_point:
-			self.set_radius(0.25)
+			self.set_radius(0.15)
 			self.set_color("white")
 		else: 
-			self.set_radius(0.5)
+			self.set_radius(0.25)
 			self.set_color("blue")
 		self.set_zorder(2)
 		self.set_rasterized(True)
@@ -96,9 +97,9 @@ xz_fixed_point_2 = plot_circle((fixed_point_b[0], fixed_point_b[2]), fixed_point
 
 xz_line = projection_line([x[0]], [x[0]])
 
-x_line = Line2D([t[0]], [x[0]], linewidth=1., color="red", zorder=1, label="x", rasterized=True)
-y_line = Line2D([t[0]], [y[0]], linewidth=1., color="green", zorder=1, label="y", rasterized=True)
-z_line = Line2D([t[0]], [z[0]], linewidth=1., color="cyan", zorder=1, label="z", rasterized=True)
+#x_line = Line2D([t[0]], [x[0]], linewidth=1., color="red", zorder=1, label="x", rasterized=True)
+#y_line = Line2D([t[0]], [y[0]], linewidth=1., color="green", zorder=1, label="y", rasterized=True)
+#z_line = Line2D([t[0]], [z[0]], linewidth=1., color="cyan", zorder=1, label="z", rasterized=True)
 
 
 
@@ -110,7 +111,7 @@ spec = fig.add_gridspec(1, 1)
 xz_ax = fig.add_subplot(spec[0, 0])
 
 smallest_value, biggest_value = smallest_and_biggest(x, y, z)
-x_ax_limit, y_ax_limit, z_ax_limit = get_ranges(x, y, t, classic=True)
+x_ax_limit, y_ax_limit, z_ax_limit = get_ranges(x, y, z, classic=True)
 
 ####################################### Titles #######################################
 initial_condition_string = r"\noindent$x_0=${:.4f} $y_0=${:.4f} $z_0=${:.4f}".format(x[0], y[0], z[0])
@@ -121,7 +122,7 @@ xz_ax.set_aspect('equal', adjustable='box')
 plt.axis('off')
 xz_ax.add_patch(xz_circle)
 
-
+times = []
 
 def make_frame(i):
 
@@ -131,50 +132,55 @@ def make_frame(i):
 	xz_ax.set(xlim = x_ax_limit, ylim = z_ax_limit)
 
 	x_data = x[:i]
-	z_data = t[:i]
+	z_data = z[:i]
 	#t_data = t[:i]
 
 	xz_ax.add_patch(xz_fixed_point_1)
 	xz_ax.add_patch(xz_fixed_point_2)
 	
-	xz_line.set_data(x_data, z_data)
+	xz_line.set_data(x_data[-3_000:], z_data[-3_000:])
 	xz_ax.add_line(xz_line)
 
 	xz_circle.center = (x[i], z[i])
-	
-	plt.savefig(f"{sys.path[0]}/butterfly_frames/_img{int(t[i]//di):04d}.png", dpi=20)
+	plt.savefig(f"{sys.path[0]}/butterfly_frames/_img{i//di:04d}.png", dpi=400)
 
 	xz_ax.lines.remove(xz_line)
-
-	process_number = int(multiprocessing.current_process().name[-1])
-	move = number_of_cores_used+1-process_number
-
-	frame_count = f"{i // di: >{len(str(t.size))}} / {t.size // di}"
-	percent_per_core = f"Core {process_number}: {(i // di)/ (t.size//di)*100: >5.2f}%"
 	time_frame_took = f"{time.time()-frame_start:.3f} s"
+	if multiprocessing.current_process().name != "MainProcess":
+		process_number = int(multiprocessing.current_process().name[-1])
+		move = number_of_cores_used+1-process_number
 
-	#print(f"", end="\r")
-	print(f"\033[{move}A\u001b[0K{percent_per_core} -- {time_frame_took}", end="\r")
-	print(f"\033[{move}E", end="\r")
+		frame_count = f"{i // di: >{len(str(t.size))}} / {t.size // di}"
+		percent_per_core = f"Core {process_number}: {(i // di)/ (t.size//di)*100: >5.2f}%"
+		
+		#print(f"", end="\r")
+		print(f"\033[{move}A\u001b[0K{percent_per_core} -- {time_frame_took}", end="\r")
+		print(f"\033[{move}E", end="\r")
+	times.append(time_frame_took)
 
-
+test=False
 def main():
-	os.system(f"cd {sys.path[0]}; ls")
+	os.system(f"cd {sys.path[0]}")
 	pool = multiprocessing.Pool(number_of_cores_used)
-	#old_pngs = glob.glob(f"butterfly_frames/*.png")
-	#if len(old_pngs) > 1:
-	#	for png in old_pngs:
-	#		os.remove(png)
-	print(f"{the_input=}")
-	pool.map(make_frame, the_input)
-
-video_parameters_file = open(f"{sys.path[0]}/video_parameters", "wb")
-video_parameters = {"fps": fps, 
-					"frames_folder": "butterfly_frames",
-					"file_name" : "butterfly_test"}
-pickle.dump(video_parameters, video_parameters_file, )
-video_parameters_file.close()
+	old_pngs = glob.glob(f"{sys.path[0]}/butterfly_frames/*.png")
+	if len(old_pngs) > 1:
+		for png in old_pngs:
+			print(png)
+			os.remove(png)
+	if test:
+		make_frame(the_input[-1])
+	else:
+		[make_frame(i) for i in the_input]
+		#make_frame(the_input)
+		video_parameters_file = open(f"{sys.path[0]}/video_parameters", "wb")
+		video_parameters = {"fps": fps, 
+							"frames_folder": "butterfly_frames",
+							"file_name" : "butterfly_test"}
+		pickle.dump(video_parameters, video_parameters_file, )
+		video_parameters_file.close()
 
 if __name__ == "__main__":
 	
 	main()
+	plt.plot(the_input, times)
+	plt.show()

@@ -4,7 +4,7 @@ import sys
 import pickle
 sigma, rho, beta = (10, 28, 8.0/3.0)
 total_time_in_sec = 30 # seconds
-points_per_sec = 100
+points_per_sec = 200
 
 npoints = total_time_in_sec * points_per_sec
 
@@ -37,5 +37,6 @@ def main():
 	print(f"\nSaving solution to {solution_file_path}\n")
 	pickle.dump(d, solution_file)
 
-if __name__ == "__main__":
+test=True
+if __name__ == "__main__":	
 	main()
