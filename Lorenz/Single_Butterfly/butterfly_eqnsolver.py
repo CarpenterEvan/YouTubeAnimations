@@ -2,8 +2,9 @@ import numpy as np
 from scipy.integrate import solve_ivp
 import sys
 import pickle
+
 sigma, rho, beta = (10, 28, 8.0/3.0)
-total_time_in_sec = 30 # seconds
+total_time_in_sec = int(sys.argv[1]) # seconds
 points_per_sec = 200
 
 npoints = total_time_in_sec * points_per_sec
@@ -37,6 +38,6 @@ def main():
     print(f"\nSaving solution to {solution_file_path}\n")
     pickle.dump(d, solution_file)
 
-test=True
-if __name__ == "__main__":	
+
+if __name__ == "__main__":
     main()
