@@ -16,7 +16,7 @@ BLUE = (0, 0, 255)
 BLACK = (0,0,0)
 
 class Ball(pygame.sprite.Sprite):
-    def __init__(self, pos:list, velocity:list, radius=10, color=WHITE):
+    def __init__(self, pos:list, velocity:list, radius=10, color=WHITE, masscharge=1):
         super().__init__()
 
         self.pos = Vector2(pos[0],pos[1])
@@ -24,10 +24,7 @@ class Ball(pygame.sprite.Sprite):
 
         self.radius = radius
         self.color = color
-    def move(self):
-        self.pos += self.vel
-        self.vel -= Vector2(0,-4)
-        print(self.pos)
+        self.masscharge = masscharge
 
     def display(self):
         pygame.draw.circle(surface = screen, 
@@ -65,11 +62,11 @@ class Ball(pygame.sprite.Sprite):
 
 
 # Ball properties
-ball_pos = [100, height/2]
+ball_pos = [width/4, height/2]
 
-proton_pos = [3*width/4,height/2]
+proton_pos = [width/2,height/2]
 
-ball = Ball(pos=ball_pos, velocity=[10,0.1])
+ball = Ball(pos=ball_pos, velocity=[4,4])
 proton = Ball(pos=proton_pos, velocity=[0,0], color=BLUE)
 
 
@@ -88,16 +85,18 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             print("Click!")
+
     # Update ball position
     screen.fill(BLACK)
     
     ball.display()
     proton.display()
 
-    ball.check_for_boundary_collision(width, height)
+    #ball.check_for_boundary_collision(width, height)
+
+    force = -(4000/(Vector2.magnitude(ball.pos-proton.pos))**2)*Vector2.normalize(ball.pos-proton.pos)
 
     ball.pos += ball.vel
-    force = (400/(Vector2.magnitude(ball.pos-proton.pos))**2)*Vector2.normalize(ball.pos-proton.pos)
     ball.vel += force
 
 
